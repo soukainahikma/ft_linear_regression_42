@@ -4,8 +4,8 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from math import sqrt
-from sklearn.metrics import r2_score
 import pickle
+
 
 class LinearRegression:
 
@@ -48,13 +48,14 @@ class LinearRegression:
                             type=int, default=1000)
         parser.add_argument("-lr", "--learning-rate", help="learning rate",
                             type=float, default=0.01)
+        parser.add_argument("-v", "--plot", help="Visualisation of results",
+                            action='store_true')
         return (parser.parse_args())
 
     @staticmethod
     def load_data(path):
         try:
             df = pd.read_csv(path)
-            print('here')
             print(f'Loading dataset of dimensions {df.shape}')
             X = df.iloc[:, :-1].values
             y = df.iloc[:, -1].values
@@ -85,17 +86,26 @@ class LinearRegression:
 
     def predict(self, X):
 
-        y_pred = X * self.weight + self.bias
-        print(22899 * self.weight + self.bias)
-        print(r2_score(self.y, y_pred))
+        y_pred = X.flatten() * self.weight + self.bias
         return (y_pred)
 
     def plot_results(self):
-        plt.figure(figsize=(8, 6))
-        plt.scatter(self.x, self.y, color="red", s=30)
-        plt.plot(self.x, self.predict(self.x), color='green', linewidth=2,
-                 label='Prediction')
-        plt.show()
+        if (self.args.plot is True):
+            plt.figure(figsize=(8, 6))
+            plt.scatter(self.x, self.y, color="red", s=30)
+            plt.plot(self.x, self.predict(self.x), color='green', linewidth=2,
+                     label='Prediction')
+            plt.xlabel('Milleage')
+            plt.ylabel('Price')
+            plt.title(f'Prediction Line with Accuracy of: '
+                      f'{(self.score() * 100):.4}%')
+            plt.show()
+
+    def score(self):
+        mean_y = np.average(self.y)
+        ss_total = np.sum((self.y - mean_y) ** 2)
+        ss_res = np.sum((self.y - self.predict(self.x)) ** 2)
+        return (1 - (ss_res/ss_total))
 
 
 if __name__ == '__main__':
@@ -105,3 +115,4 @@ if __name__ == '__main__':
     lr_model.save()
     lr_model.predict(lr_model.x)
     lr_model.plot_results()
+    lr_model.score()

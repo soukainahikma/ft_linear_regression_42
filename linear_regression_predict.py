@@ -19,7 +19,7 @@ class Prediction:
             self.mileage = mileage
         except Exception:
             sys.exit('You have entered a negative value')
-    
+
     def get_file_info(self, path):
         try:
             with open(path, 'rb') as f:

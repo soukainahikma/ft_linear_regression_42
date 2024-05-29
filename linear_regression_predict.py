@@ -17,7 +17,7 @@ class Prediction:
                 raise Exception
             self.mileage = mileage
         except Exception:
-            sys.exit('You have entered a negative value')
+            sys.exit('Please enter a positive number!!')
 
     def get_file_info(self, path):
         try:
@@ -25,7 +25,7 @@ class Prediction:
                 model = pickle.load(f)
                 self.teta1, self.teta0 = model
         except Exception as error:
-            sys.exit(error)
+            print(error)
 
     def estimate(self):
         self.price = self.teta0 + self.teta1 * self.mileage

@@ -36,6 +36,8 @@ class LinearRegression:
         try:
             with open('model.pkl', 'wb') as f:
                 pickle.dump((self.weight, self.bias), f)
+                print(f'teta1 = {self.weight}')
+                print(f'teta0 = {self.bias}')
         except ValueError:
             AssertionError('Error while saving model.txt')
 
@@ -81,6 +83,11 @@ class LinearRegression:
 
     def prepare_data(self):
         self.x, self.y, self.columns = self.load_data(self.args.path)
+        if self.args.learning_rate <= 0:
+            sys.exit('Please enter a learning_rate value grater than 0')
+        elif self.args.learning_rate > 1:
+            self.args.learning_rate = 1
+
         self.x_scaled = self.scaling(self.x).flatten()
         self.y_scaled = self.scaling(self.y)
 
@@ -92,13 +99,15 @@ class LinearRegression:
     def plot_results(self):
         if (self.args.plot is True):
             plt.figure(figsize=(8, 6))
-            plt.scatter(self.x, self.y, color="red", s=30)
+            plt.scatter(self.x, self.y, color="red", s=30, 
+                        label='Training Data')
             plt.plot(self.x, self.predict(self.x), color='green', linewidth=2,
                      label='Prediction')
-            plt.xlabel('Milleage')
+            plt.xlabel('Mileage')
             plt.ylabel('Price')
             plt.title(f'Prediction Line with Accuracy of: '
                       f'{(self.score() * 100):.4}%')
+            plt.legend()
             plt.show()
 
     def score(self):

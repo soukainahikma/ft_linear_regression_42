@@ -99,7 +99,7 @@ class LinearRegression:
     def plot_results(self):
         if (self.args.plot is True):
             plt.figure(figsize=(8, 6))
-            plt.scatter(self.x, self.y, color="red", s=30, 
+            plt.scatter(self.x, self.y, color="red", s=30,
                         label='Training Data')
             plt.plot(self.x, self.predict(self.x), color='green', linewidth=2,
                      label='Prediction')
